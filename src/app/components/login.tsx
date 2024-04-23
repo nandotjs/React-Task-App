@@ -1,7 +1,8 @@
-"use client";
+"use client"
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import RegisterCard from './register'; // Importe o componente RegisterCard
+import { useRouter } from 'next/navigation';
 
 interface LoginCardProps {
     onRegisterClick: () => void; // Declare a propriedade onRegisterClick
@@ -13,11 +14,14 @@ const LoginCard: React.FC<LoginCardProps> = ({ onRegisterClick }) => {
   const [showRegister, setShowRegister] = useState(false); // Adicione um estado para controlar a exibição do RegisterCard
   const [usernameError, setUsernameError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
+  const router = useRouter();
+
+
 
   const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(event.target.value);
     setUsernameError(false);
-  };
+  }; 
 
   const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(event.target.value);
@@ -31,6 +35,7 @@ const LoginCard: React.FC<LoginCardProps> = ({ onRegisterClick }) => {
         return;
     }
     console.log('Login:', { username, password });
+    router.push('/dashboard');
   };
 
   const handleRegisterClick = () => {
