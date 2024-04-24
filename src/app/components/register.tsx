@@ -38,6 +38,10 @@ const RegisterCard: React.FC<RegisterCardProps> = ({ onBackClick }) => {
       setConfirmPasswordError(!confirmPassword.trim());
       return;
     }
+    else {
+      onBackClick()
+      return;
+    }
 
     // Lógica de registro aqui
     console.log('Register:', { username, password, confirmPassword });
