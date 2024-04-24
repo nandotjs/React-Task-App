@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState } from 'react';
 
 const TaskList: React.FC = () => {
@@ -64,7 +63,9 @@ const TaskList: React.FC = () => {
             <span className={`flex-grow ${task.includes('(Feito)') && 'line-through'}`}>{task}</span>
             <div className="flex">
               <button className="text-white bg-red-500 hover:bg-gray-800 hover:text-white font-medium py-1 px-2 rounded-md mr-2 transition duration-300 ease-in-out" onClick={() => handleDeleteTask(index)}>Excluir</button>
-              <button className="text-white bg-green-500 hover:bg-gray-800 hover:text-white font-medium py-1 px-2 rounded-md transition duration-300 ease-in-out" onClick={() => handleToggleTask(index)}>Feito</button>
+              <button className={`text-white font-medium py-1 px-2 rounded-md transition duration-300 ease-in-out ${task.includes('(Feito)') ? 'bg-red-500 hover:bg-red-700' : 'bg-green-500 hover:bg-gray-800'}`} onClick={() => handleToggleTask(index)}>
+                {task.includes('(Feito)') ? 'Desfazer' : 'Feito'}
+              </button>
             </div>
           </div>
         ))}
