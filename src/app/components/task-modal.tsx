@@ -9,18 +9,21 @@ interface TaskProps {
   onToggle: () => void;
 }
 
+
 // Componente de tarefa individual
 const Task: React.FC<TaskProps> = ({ text, onDelete, onToggle }) => {
   return (
-    <div className="flex justify-between items-center bg-gray-100 p-4 mb-2 rounded">
+    <div className="flex justify-between items-center bg-gray-100 p-4 mb-2 rounded border border-gray-600">
       <span className={`flex-grow ${text.includes('(Feito)') && 'line-through'}`}>{text}</span>
       <div className="flex">
-        <button className="text-red-500 mr-2" onClick={onDelete}>Excluir</button>
-        <button className="text-green-500" onClick={onToggle}>Feito</button>
+        <button className="text-white bg-red-500 hover:bg-gray-800 hover:text-white font-medium py-1 px-2 rounded-md mr-2 transition duration-300 ease-in-out" onClick={onDelete}>Excluir</button>
+        <button className="text-white bg-green-500 hover:bg-gray-800 hover:text-white font-medium py-1 px-2 rounded-md transition duration-300 ease-in-out" onClick={onToggle}>Feito</button>
       </div>
     </div>
   );
 };
+
+
 
 // Componente de lista de tarefas
 const TaskList: React.FC = () => {
@@ -50,11 +53,11 @@ const TaskList: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className="max-w-md mx-auto mt-8">
       {/* Componente para adicionar nova tarefa */}
-      <div className="mb-4">
+      <div className="mb-4 flex justify-center">
         <input
-          className="border border-gray-400 p-2 mr-2"
+          className="border border-gray-400 p-2 mr-2 w-64"
           type="text"
           placeholder="Adicionar nova tarefa"
           value={newTask}
