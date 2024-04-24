@@ -1,5 +1,4 @@
-import Image from "next/image";
-import TaskList from "../components/task-modal";
+import TaskList from "../components/task-list";
 
 export default function Home() {
   return (

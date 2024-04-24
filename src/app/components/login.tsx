@@ -1,11 +1,11 @@
 "use client"
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import RegisterCard from './register'; // Importe o componente RegisterCard
 import { useRouter } from 'next/navigation';
 
 interface LoginCardProps {
-    onRegisterClick: () => void; // Declare a propriedade onRegisterClick
+  onRegisterClick: () => void; // Declare a propriedade onRegisterClick
 }
 
 const LoginCard: React.FC<LoginCardProps> = ({ onRegisterClick }) => {
@@ -16,12 +16,10 @@ const LoginCard: React.FC<LoginCardProps> = ({ onRegisterClick }) => {
   const [passwordError, setPasswordError] = useState(false);
   const router = useRouter();
 
-
-
   const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(event.target.value);
     setUsernameError(false);
-  }; 
+  };
 
   const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(event.target.value);
@@ -30,9 +28,9 @@ const LoginCard: React.FC<LoginCardProps> = ({ onRegisterClick }) => {
 
   const handleLogin = () => {
     if (!username.trim() || !password.trim()) {
-        setUsernameError(!username.trim());
-        setPasswordError(!password.trim());
-        return;
+      setUsernameError(!username.trim());
+      setPasswordError(!password.trim());
+      return;
     }
     console.log('Login:', { username, password });
     router.push('/dashboard');
@@ -42,9 +40,13 @@ const LoginCard: React.FC<LoginCardProps> = ({ onRegisterClick }) => {
     setShowRegister(true); // Quando o botão "Register" for clicado, exiba o RegisterCard
   };
 
+  const handleBackClick = () => {
+    setShowRegister(false); // Quando o botão "Voltar" for clicado, volte para o LoginCard
+  };
+
   return (
     <div className="flex justify-center items-center h-screen">
-      {!showRegister ? ( // Verifica se o RegisterCard deve ser exibido
+      {!showRegister ? (
         <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 " style={{ borderColor: '#c1c1c1', borderWidth: '1px' }}>
 
           <div className="mb-4">
@@ -87,22 +89,22 @@ const LoginCard: React.FC<LoginCardProps> = ({ onRegisterClick }) => {
             >
               Sign In
             </button>
-            
+
             <div className="flex justify-center">
               <p className="text-gray-700 mx-2">or</p>
             </div>
-            
+
             <button
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               type="button"
-              onClick={handleRegisterClick} // Chame a função handleRegisterClick quando o botão "Register" for clicado
+              onClick={handleRegisterClick}
             >
               Register
             </button>
           </div>
         </div>
       ) : (
-        <RegisterCard /> // Exibe o RegisterCard se showRegister for true
+        <RegisterCard onBackClick={handleBackClick} /> // Passa a função handleBackClick para o componente RegisterCard
       )}
     </div>
   );

@@ -1,11 +1,12 @@
 "use client";
+
 import React, { useState } from 'react';
+import Task from './task';
 
 const TaskList: React.FC = () => {
   const [tasks, setTasks] = useState<string[]>([]);
   const [newTask, setNewTask] = useState<string>('');
 
-  // Função para adicionar uma nova tarefa
   const handleAddTask = () => {
     if (newTask.trim()) {
       setTasks([...tasks, newTask]);
@@ -13,13 +14,11 @@ const TaskList: React.FC = () => {
     }
   };
 
-  // Função para excluir uma tarefa
   const handleDeleteTask = (index: number) => {
     const updatedTasks = tasks.filter((_, i) => i !== index);
     setTasks(updatedTasks);
   };
 
-  // Função para marcar uma tarefa como feita ou não feita
   const handleToggleTask = (index: number) => {
     const updatedTasks = tasks.map((task, i) =>
       i === index ? (task.includes('(Feito)') ? task.replace(' (Feito)', '') : task + ' (Feito)') : task
@@ -27,11 +26,7 @@ const TaskList: React.FC = () => {
     setTasks(updatedTasks);
   };
 
-  // Função para fazer logout
   const handleLogout = () => {
-    // Adicione a lógica de logout aqui, por exemplo, limpar o token de autenticação
-
-    // Redirecionamento para a tela de login
     window.location.href = '/';
   };
 
@@ -58,16 +53,9 @@ const TaskList: React.FC = () => {
         </div>
       </div>
       <div>
+        {/* Mapeia cada tarefa para o componente Task */}
         {tasks.map((task, index) => (
-          <div key={index} className={`flex justify-between items-center bg-gray-100 p-4 mb-2 rounded border ${task.includes('(Feito)') ? 'border-green-500' : 'border-gray-600'}`}>
-            <span className={`flex-grow ${task.includes('(Feito)') && 'line-through'}`}>{task}</span>
-            <div className="flex">
-              <button className="text-white bg-red-500 hover:bg-red-700 hover:text-white font-medium py-1 px-2 rounded-md mr-2 transition duration-300 ease-in-out" onClick={() => handleDeleteTask(index)}>Excluir</button>
-              <button className={`text-white font-medium py-1 px-2 rounded-md transition duration-300 ease-in-out ${task.includes('(Feito)') ? 'bg-red-500 hover:bg-red-700' : 'bg-green-500 hover:bg-green-800'}`} onClick={() => handleToggleTask(index)}>
-                {task.includes('(Feito)') ? 'Desfazer' : 'Feito'}
-              </button>
-            </div>
-          </div>
+          <Task key={index} task={task} index={index} onDelete={handleDeleteTask} onToggle={handleToggleTask} />
         ))}
       </div>
     </div>
@@ -75,4 +63,3 @@ const TaskList: React.FC = () => {
 };
 
 export default TaskList;
-
