@@ -1,29 +1,24 @@
-"use client";
+"use client"
 
 import React, { useState } from 'react';
 import Task from './task';
+import { useTaskStore } from './taskStore';
 
 const TaskList: React.FC = () => {
-  const [tasks, setTasks] = useState<string[]>([]);
+  const tasks = useTaskStore((state) => state.tasks);
+  const addTask = useTaskStore((state) => state.addTask);
+  const deleteTask = useTaskStore((state) => state.deleteTask);
+  const toggleTask = useTaskStore((state) => state.toggleTask);
+  const markAllCompleted = useTaskStore((state) => state.markAllCompleted);
+  const deleteAllTasks = useTaskStore((state) => state.deleteAllTasks);
+
   const [newTask, setNewTask] = useState<string>('');
 
   const handleAddTask = () => {
     if (newTask.trim()) {
-      setTasks([...tasks, newTask]);
+      addTask(newTask);
       setNewTask('');
     }
-  };
-
-  const handleDeleteTask = (index: number) => {
-    const updatedTasks = tasks.filter((_, i) => i !== index);
-    setTasks(updatedTasks);
-  };
-
-  const handleToggleTask = (index: number) => {
-    const updatedTasks = tasks.map((task, i) =>
-      i === index ? (task.includes('(Feito)') ? task.replace(' (Feito)', '') : task + ' (Feito)') : task
-    );
-    setTasks(updatedTasks);
   };
 
   const handleLogout = () => {
@@ -44,10 +39,7 @@ const TaskList: React.FC = () => {
             value={newTask}
             onChange={(e) => setNewTask(e.target.value)}
           />
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            onClick={handleAddTask}
-          >
+          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={handleAddTask}>
             Adicionar
           </button>
         </div>
@@ -55,8 +47,16 @@ const TaskList: React.FC = () => {
       <div>
         {/* Mapeia cada tarefa para o componente Task */}
         {tasks.map((task, index) => (
-          <Task key={index} task={task} index={index} onDelete={handleDeleteTask} onToggle={handleToggleTask} />
+          <Task key={index} task={task} index={index} onDelete={() => deleteTask(index)} onToggle={() => toggleTask(index)} />
         ))}
+        <div className="flex justify-between mb-4">
+          <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onClick={markAllCompleted}>
+            Marcar Todas como Concluídas
+          </button>
+          <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" onClick={deleteAllTasks}>
+            Excluir Todas
+          </button>
+        </div>
       </div>
     </div>
   );

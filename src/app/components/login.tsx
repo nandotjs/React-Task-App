@@ -14,6 +14,7 @@ const LoginCard: React.FC<LoginCardProps> = ({ onRegisterClick }) => {
   const [showRegister, setShowRegister] = useState(false); // Adicione um estado para controlar a exibição do RegisterCard
   const [usernameError, setUsernameError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
+ 
   const router = useRouter();
 
   const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
