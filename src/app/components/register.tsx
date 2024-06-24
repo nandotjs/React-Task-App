@@ -1,5 +1,6 @@
 "use client";
 
+import axios, { AxiosError } from 'axios';
 import React, { useState } from 'react';
 
 interface RegisterCardProps {
@@ -29,7 +30,7 @@ const RegisterCard: React.FC<RegisterCardProps> = ({ onBackClick }) => {
     setConfirmPasswordError(false);
   };
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
     // Verifica se os campos estão vazios
     if (!username.trim() || !password.trim() || !confirmPassword.trim()) {
       // Define os estados de erro como verdadeiro
@@ -38,13 +39,43 @@ const RegisterCard: React.FC<RegisterCardProps> = ({ onBackClick }) => {
       setConfirmPasswordError(!confirmPassword.trim());
       return;
     }
-    else {
-      onBackClick()
+  
+    // Verifica se as senhas coincidem
+    if (password !== confirmPassword) {
+      setPasswordError(true);
+      setConfirmPasswordError(true);
       return;
     }
-
-    // Lógica de registro aqui
-    console.log('Register:', { username, password, confirmPassword });
+  
+    try {
+      // Faz a requisição POST para o backend
+      const response = await axios.post('http://localhost:4000/api/users/register', {
+        name: username,
+        password: password,
+      });
+  
+      // Verifica a resposta do backend
+      if (response.status === 201) {
+        // Limpa os campos após o registro
+        setUsername('');
+        setPassword('');
+        setConfirmPassword('');
+  
+        // Chama a função onBackClick para voltar para a tela anterior
+        onBackClick();
+      }
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError;
+        if (axiosError.response) {
+          console.error('Request Error:', axiosError.response.data);
+        } else {
+          console.error('Request Error:', axiosError.message);
+        }
+      } else {
+        console.error('Unknown Error:', error);
+      }
+    }
   };
 
   return (
