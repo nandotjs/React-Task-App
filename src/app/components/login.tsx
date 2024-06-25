@@ -1,21 +1,23 @@
 "use client";
 
 import React, { useState } from 'react';
-import axios from 'axios'; // Import axios
+import axios from 'axios';
 import RegisterCard from './register'; // Importe o componente RegisterCard
 import { useRouter } from 'next/navigation';
 
 interface LoginCardProps {
   onRegisterClick: () => void; // Declare a propriedade onRegisterClick
+  onLogin: (userId: string) => void;
+  setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>; // Adicione setIsLoggedIn como uma propriedade
 }
 
-const LoginCard: React.FC<LoginCardProps> = ({ onRegisterClick }) => {
+const LoginCard: React.FC<LoginCardProps> = ({ onRegisterClick, onLogin, setIsLoggedIn }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showRegister, setShowRegister] = useState(false); // Adicione um estado para controlar a exibição do RegisterCard
   const [usernameError, setUsernameError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
-  const [userId, setUserId] = useState<string | null>(null);
+  
 
   const router = useRouter();
 
@@ -50,12 +52,11 @@ const LoginCard: React.FC<LoginCardProps> = ({ onRegisterClick }) => {
       if (response.status === 200) {
         const userData = response.data.user;
         console.log('User data:', userData);
-        setUserId(userData._id);
+        onLogin(userData._id);
         setUsername('');
         setPassword('');
-
-        // Redireciona para o dashboard
-        router.push('/dashboard');
+        // Chama a função onLogin para atualizar o estado de isLoggedIn no componente pai (Home)
+        setIsLoggedIn(true)
       }
     } catch (error) {
       setUsernameError(true);
@@ -65,11 +66,11 @@ const LoginCard: React.FC<LoginCardProps> = ({ onRegisterClick }) => {
   };
 
   const handleRegisterClick = () => {
-    setShowRegister(true); // Quando o botão "Register" for clicado, exiba o RegisterCard
+    setShowRegister(true); 
   };
 
   const handleBackClick = () => {
-    setShowRegister(false); // Quando o botão "Voltar" for clicado, volte para o LoginCard
+    setShowRegister(false); 
   };
 
   return (
@@ -132,7 +133,7 @@ const LoginCard: React.FC<LoginCardProps> = ({ onRegisterClick }) => {
           </div>
         </div>
       ) : (
-        <RegisterCard onBackClick={handleBackClick} /> // Passa a função handleBackClick para o componente RegisterCard
+        <RegisterCard onBackClick={handleBackClick} /> 
       )}
     </div>
   );

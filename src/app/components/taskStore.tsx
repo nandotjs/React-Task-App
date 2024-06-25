@@ -2,6 +2,7 @@ import create from 'zustand';
 
 interface TaskStore {
   tasks: string[];
+  setTasks: (tasks: string[]) => void;
   addTask: (task: string) => void;
   deleteTask: (index: number) => void;
   toggleTask: (index: number) => void;
@@ -11,6 +12,7 @@ interface TaskStore {
 
 export const useTaskStore = create<TaskStore>((set) => ({
   tasks: [],
+  setTasks: (tasks) => set({ tasks }),
   addTask: (task) => set((state) => ({ tasks: [...state.tasks, task] })),
   deleteTask: (index) => set((state) => ({ tasks: state.tasks.filter((_, i) => i !== index) })),
   toggleTask: (index) =>
