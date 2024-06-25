@@ -1,6 +1,7 @@
-"use client"
+"use client";
 
 import React, { useState } from 'react';
+import axios from 'axios'; // Import axios
 import RegisterCard from './register'; // Importe o componente RegisterCard
 import { useRouter } from 'next/navigation';
 
@@ -14,7 +15,8 @@ const LoginCard: React.FC<LoginCardProps> = ({ onRegisterClick }) => {
   const [showRegister, setShowRegister] = useState(false); // Adicione um estado para controlar a exibição do RegisterCard
   const [usernameError, setUsernameError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
- 
+  const [userId, setUserId] = useState<string | null>(null);
+
   const router = useRouter();
 
   const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -27,14 +29,39 @@ const LoginCard: React.FC<LoginCardProps> = ({ onRegisterClick }) => {
     setPasswordError(false);
   };
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
+    // Verifica se os campos estão vazios
     if (!username.trim() || !password.trim()) {
       setUsernameError(!username.trim());
       setPasswordError(!password.trim());
       return;
     }
-    console.log('Login:', { username, password });
-    router.push('/dashboard');
+
+    try {
+      // Faz a requisição GET para o backend para realizar o login
+      const response = await axios.get(`http://localhost:4000/api/users/login`, {
+        params: {
+          username,
+          password
+        }
+      });
+
+      // Verifica a resposta do backend
+      if (response.status === 200) {
+        const userData = response.data.user;
+        console.log('User data:', userData);
+        setUserId(userData._id);
+        setUsername('');
+        setPassword('');
+
+        // Redireciona para o dashboard
+        router.push('/dashboard');
+      }
+    } catch (error) {
+      setUsernameError(true);
+      setPasswordError(true);
+      console.error('Login failed:', error);
+    }
   };
 
   const handleRegisterClick = () => {
@@ -48,7 +75,7 @@ const LoginCard: React.FC<LoginCardProps> = ({ onRegisterClick }) => {
   return (
     <div className="flex justify-center items-center h-screen">
       {!showRegister ? (
-        <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 " style={{ borderColor: '#c1c1c1', borderWidth: '1px' }}>
+        <div className="bg-white shadow-md rounded px-8 pt-6 pb-8" style={{ borderColor: '#c1c1c1', borderWidth: '1px' }}>
 
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
