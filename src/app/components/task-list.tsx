@@ -6,7 +6,7 @@ import { useTaskStore } from './taskStore';
 import axios from 'axios';
 
 interface TaskListProps {
-  userId: string | null;
+  userId: string;
 }
 
 const TaskList: React.FC<TaskListProps> = ({ userId }) => {
@@ -102,8 +102,8 @@ const TaskList: React.FC<TaskListProps> = ({ userId }) => {
       </div>
       <div>
         {/* Mapeia cada tarefa para o componente Task */}
-        {tasks.map((task, index) => (
-          <Task key={index} task={task} index={index} onDelete={() => deleteTask(index)} onToggle={() => toggleTask(index)} />
+        {tasks.map((task, index,) => (
+          <Task key={index} task={task} index={index} onDelete={() => deleteTask(index)} onToggle={() => toggleTask(index)} userId={userId} />
         ))}
         <div className="flex justify-between mb-4">
           <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onClick={markAllCompleted}>
