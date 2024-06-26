@@ -6,12 +6,13 @@ import { useTaskStore } from './taskStore';
 import axios from 'axios';
 
 interface TaskListProps {
-  userId: string | null; 
+  userId: string | null;
 }
 
 const TaskList: React.FC<TaskListProps> = ({ userId }) => {
   const [newTask, setNewTask] = useState<string>('');
   const tasks = useTaskStore((state) => state.tasks);
+  const setTasks = useTaskStore((state) => state.setTasks);
   const addTask = useTaskStore((state) => state.addTask);
   const deleteTask = useTaskStore((state) => state.deleteTask);
   const toggleTask = useTaskStore((state) => state.toggleTask);
@@ -25,8 +26,11 @@ const TaskList: React.FC<TaskListProps> = ({ userId }) => {
         const response = await axios.get(`http://localhost:4000/api/tasks/${userId}`);
         if (response.status === 200) {
           const userTasks = response.data.tasks; // Supondo que o backend retorna um objeto com uma propriedade tasks
-          // Atualiza o estado local com as tarefas do usuário
-          userTasks.forEach((task: string) => addTask(task));
+          if (Array.isArray(userTasks)) {
+            setTasks(userTasks.map(task => task.title)); // Ajuste para mapear apenas os títulos das tarefas
+          } else {
+            setTasks([]);
+          }
         }
       }
     } catch (error) {
@@ -57,6 +61,19 @@ const TaskList: React.FC<TaskListProps> = ({ userId }) => {
       }
     } catch (error) {
       console.error('Failed to create task:', error);
+    }
+  };
+
+  const handleDeleteUserTasks = async () => {
+    try {
+      if (userId) {
+        const response = await axios.delete(`http://localhost:4000/api/tasks/delete/${userId}`);
+        if (response.status === 200) {
+          deleteAllTasks(); // Limpa todas as tarefas localmente após exclusão bem-sucedida
+        }
+      }
+    } catch (error) {
+      console.error('Failed to delete user tasks:', error);
     }
   };
 
@@ -92,7 +109,7 @@ const TaskList: React.FC<TaskListProps> = ({ userId }) => {
           <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onClick={markAllCompleted}>
             Marcar Todas como Concluídas
           </button>
-          <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" onClick={deleteAllTasks}>
+          <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" onClick={handleDeleteUserTasks}>
             Excluir Todas
           </button>
         </div>
