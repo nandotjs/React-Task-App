@@ -11,7 +11,7 @@ interface TaskListProps {
 
 const TaskList: React.FC<TaskListProps> = ({ userId }) => {
   const [newTask, setNewTask] = useState<string>("")
-  const [filterStatus, setFilterStatus] = useState<string>("") // Novo estado para o filtro
+  const [filterStatus, setFilterStatus] = useState<string>("") 
   const tasks = useTaskStore((state) => state.tasks)
   const setTasks = useTaskStore((state) => state.setTasks)
   const addTask = useTaskStore((state) => state.addTask)
@@ -20,7 +20,7 @@ const TaskList: React.FC<TaskListProps> = ({ userId }) => {
   const markAllCompleted = useTaskStore((state) => state.markAllCompleted)
   const deleteAllTasks = useTaskStore((state) => state.deleteAllTasks)
 
-  // Função para carregar as tarefas do usuário ao fazer login
+  // Load user tasks
   const fetchTasks = async (status?: string) => {
     try {
       if (userId) {
@@ -30,7 +30,7 @@ const TaskList: React.FC<TaskListProps> = ({ userId }) => {
         }
         const response = await axios.get(url)
         if (response.status === 200) {
-          const userTasks = response.data.tasks // Supondo que o backend retorna um objeto com uma propriedade tasks
+          const userTasks = response.data.tasks 
           if (Array.isArray(userTasks)) {
             setTasks(
               userTasks.map((task) => ({
@@ -38,7 +38,7 @@ const TaskList: React.FC<TaskListProps> = ({ userId }) => {
                 completed: task.completed,
                 _id: task._id,
               }))
-            ) // Ajuste para mapear apenas os títulos das tarefas
+            ) 
           } else {
             setTasks([])
           }
@@ -51,22 +51,22 @@ const TaskList: React.FC<TaskListProps> = ({ userId }) => {
 
   useEffect(() => {
     if (userId) {
-      fetchTasks() // Carrega as tarefas do usuário ao montar o componente
+      fetchTasks() // Load tasks
     }
-  }, [userId]) // Dispara o efeito sempre que o userId mudar
+  }, [userId]) 
 
   useEffect(() => {
     if (filterStatus) {
-      fetchTasks(filterStatus) // Recarrega as tarefas com base no filtro
+      fetchTasks(filterStatus) // Load by filter
     } else {
       fetchTasks()
     }
-  }, [filterStatus]) // Dispara o efeito sempre que o filtro mudar
+  }, [filterStatus]) 
 
+  // Add task
   const handleAddTask = async () => {
     try {
       if (newTask.trim()) {
-        // Faz a requisição POST para criar uma nova tarefa associada ao usuário
         const response = await axios.post(
           `http://localhost:4000/api/tasks/create`,
           {
@@ -76,9 +76,13 @@ const TaskList: React.FC<TaskListProps> = ({ userId }) => {
         )
 
         if (response.status === 201) {
-          // Atualiza o estado local com a nova tarefa adicionada
-          addTask(newTask)
-          setNewTask("") // Limpa o campo de nova tarefa após criar
+          const createdTask = response.data; 
+        addTask({
+          title: newTask,
+          completed: false,
+          _id: createdTask._id, 
+        });
+          setNewTask("") 
         }
       }
     } catch (error) {
@@ -86,6 +90,7 @@ const TaskList: React.FC<TaskListProps> = ({ userId }) => {
     }
   }
 
+  // Delete all tasks
   const handleDeleteUserTasks = async () => {
     try {
       if (userId) {
@@ -93,7 +98,7 @@ const TaskList: React.FC<TaskListProps> = ({ userId }) => {
           `http://localhost:4000/api/tasks/delete/${userId}`
         )
         if (response.status === 200) {
-          deleteAllTasks() // Limpa todas as tarefas localmente após exclusão bem-sucedida
+          deleteAllTasks() 
         }
       }
     } catch (error) {
@@ -102,7 +107,7 @@ const TaskList: React.FC<TaskListProps> = ({ userId }) => {
   }
 
   const handleLogout = () => {
-    window.location.href = "/" // Redireciona para a página inicial ao fazer logout
+    window.location.href = "/" 
   }
 
   return (

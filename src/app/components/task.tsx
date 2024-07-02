@@ -4,7 +4,7 @@ import React from "react"
 import axios from "axios"
 
 interface TaskProps {
-  task: { title: string; completed: boolean }
+  task: { _id: string; title: string; completed: boolean }
   userId: string
   index: number
   onDelete: (index: number) => void
@@ -18,19 +18,21 @@ const Task: React.FC<TaskProps> = ({
   onDelete,
   onToggle,
 }) => {
+  // Delete Task
   const handleDeleteTask = async () => {
     try {
       const response = await axios.delete(
         `http://localhost:4000/api/tasks/delete/${userId}/${index}`
       )
       if (response.status === 200) {
-        onDelete(index) // Chame a função de exclusão local
+        onDelete(index) 
       }
     } catch (error) {
       console.error("Failed to delete task:", error)
     }
   }
 
+  // Mark task as completed or not
   const handleToggleTask = async () => {
     try {
       const response = await axios.patch(
@@ -40,7 +42,7 @@ const Task: React.FC<TaskProps> = ({
         }
       )
       if (response.status === 200) {
-        onToggle(index) // Atualiza o estado local da tarefa
+        onToggle(index) 
       }
     } catch (error) {
       console.error("Failed to update task status:", error)

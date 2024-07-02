@@ -5,7 +5,7 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Task App Again",
+  title: "Task App",
   description: "A task app created with next, react, tailwind and more!",
 };
 

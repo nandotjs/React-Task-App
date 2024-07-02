@@ -1,7 +1,6 @@
 "use client"
 
 import React, { useState } from "react"
-import axios from "axios"
 import LoginCard from "./components/login"
 import RegisterCard from "./components/register"
 import TaskList from "./components/task-list"
@@ -9,23 +8,23 @@ import TaskList from "./components/task-list"
 export default function Home() {
   const [isLoginPage, setIsLoginPage] = useState(true)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const [userId, setUserId] = useState<string | null>(null)
+  const [userId, setUserId] = useState<string>('')
 
   const handleTogglePage = () => {
     setIsLoginPage(!isLoginPage)
   }
 
   const handleLogin = (userId: string) => {
-    setUserId(userId) // Armazena o ID do usuário no estado
-    setIsLoggedIn(true) // Define o usuário como logado
+    setUserId(userId) 
+    setIsLoggedIn(true) 
   }
 
   return (
     <div className="flex justify-center items-center h-screen">
-      {/* Renderiza o TaskList se o usuário estiver logado */}
+      {/* if is logged shows taskList */}
       {isLoggedIn ? (
-        <TaskList userId={userId} />
-      ) : // Renderiza o LoginCard ou o RegisterCard baseado no estado isLoginPage
+        <TaskList userId={userId ?? ''} />
+      ) : // switch btween login and register
       isLoginPage ? (
         <LoginCard
           onRegisterClick={handleTogglePage}
