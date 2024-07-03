@@ -19,7 +19,21 @@ const TaskList: React.FC<TaskListProps> = ({ userId }) => {
   const toggleTask = useTaskStore((state) => state.toggleTask)
   const markAllCompleted = useTaskStore((state) => state.markAllCompleted)
   const deleteAllTasks = useTaskStore((state) => state.deleteAllTasks)
-
+  
+  useEffect(() => {
+    if (userId) {
+      fetchTasks() // Load tasks
+    }
+  }, [userId]) 
+  
+  useEffect(() => {
+    if (filterStatus) {
+      fetchTasks(filterStatus) // Load by filter
+    } else {
+      fetchTasks()
+    }
+  }, [filterStatus]) 
+  
   // Load user tasks
   const fetchTasks = async (status?: string) => {
     try {
@@ -48,20 +62,6 @@ const TaskList: React.FC<TaskListProps> = ({ userId }) => {
       console.error("Failed to fetch user tasks:", error)
     }
   }
-
-  useEffect(() => {
-    if (userId) {
-      fetchTasks() // Load tasks
-    }
-  }, [userId]) 
-
-  useEffect(() => {
-    if (filterStatus) {
-      fetchTasks(filterStatus) // Load by filter
-    } else {
-      fetchTasks()
-    }
-  }, [filterStatus]) 
 
   // Add task
   const handleAddTask = async () => {
