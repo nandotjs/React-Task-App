@@ -106,6 +106,22 @@ const TaskList: React.FC<TaskListProps> = ({ userId }) => {
     }
   }
 
+  const handleMarkAllTasks = async () => {
+    try {
+      if (userId) {
+        const response = await axios.patch(
+          `http://localhost:4000/api/tasks/markAll/${userId}`
+        )
+        if (response.status === 200) {
+          markAllCompleted() 
+        }
+      }
+    } catch (error) {
+      console.error("Failed to complet all tasks:", error)
+    }
+  }
+  
+
   const handleLogout = () => {
     window.location.href = "/" 
   }
@@ -160,7 +176,7 @@ const TaskList: React.FC<TaskListProps> = ({ userId }) => {
         <div className="flex justify-between mb-4">
           <button
             className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-            onClick={markAllCompleted}
+            onClick={handleMarkAllTasks}
           >
             Marcar Todas como Concluídas
           </button>
